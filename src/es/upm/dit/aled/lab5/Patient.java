@@ -116,6 +116,7 @@ public class Patient extends Thread {
 		this.color = color;
 	}
 
+
 	/**
 	 * Adds a new Transfer at the end of the Patient's protocol.
 	 * 
@@ -164,7 +165,28 @@ public class Patient extends Thread {
 	 */
 	@Override
 	public void run() {
-		// TODO
+		try {
+			location.enter(this);
+			attendedAtLocation();
+	        location.exit(this);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        
+		for (int i = 0; i<protocol.size(); i++) {
+			try {
+				advanceProtocol();
+				location.enter(this);
+				attendedAtLocation();
+				location.exit(this);	
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		EmergencyRoomGUI instance = EmergencyRoomGUI.getInstance();
+		instance.removePatient(this);
+		
 	}
 
 }
